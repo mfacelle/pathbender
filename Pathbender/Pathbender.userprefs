@@ -1,13 +1,11 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/scripts/level/LevelUIManager.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/scripts/level/LevelManager.cs">
     <Files>
-      <File FileName="Assets/scripts/level/LevelValues.cs" Line="5" Column="1" />
-      <File FileName="Assets/scripts/level/TouchManager.cs" Line="23" Column="3" />
-      <File FileName="Assets/scripts/level/LevelUIManager.cs" Line="11" Column="26" />
-      <File FileName="Assets/scripts/level/DebugManager.cs" Line="1" Column="1" />
-      <File FileName="Assets/scripts/objects/MassiveObject.cs" Line="7" Column="20" />
-      <File FileName="Assets/scripts/objects/RotatingObject.cs" Line="1" Column="1" />
+      <File FileName="Assets/scripts/level/TouchManager.cs" Line="54" Column="39" />
+      <File FileName="Assets/scripts/level/LevelManager.cs" Line="15" Column="22" />
+      <File FileName="Assets/scripts/level/LevelUIManager.cs" Line="14" Column="38" />
+      <File FileName="Assets/scripts/objects/ChargedObject.cs" Line="7" Column="24" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
