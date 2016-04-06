@@ -32,3 +32,5 @@
 /Users/mike/Documents/_projects/unity/pathbender/Pathbender/Temp/bin/Debug/Unity.CecilTools.dll
 /Users/mike/Documents/_projects/unity/pathbender/Pathbender/Temp/bin/Debug/Mono.Cecil.Pdb.dll
 /Users/mike/Documents/_projects/unity/pathbender/Pathbender/Temp/bin/Debug/Mono.Cecil.Mdb.dll
+/Users/mike/Documents/_projects/unity/pathbender/Pathbender/Temp/bin/Debug/Assembly-CSharp.dll
+/Users/mike/Documents/_projects/unity/pathbender/Pathbender/Temp/bin/Debug/Assembly-CSharp.dll.mdb
