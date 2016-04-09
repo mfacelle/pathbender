@@ -17,25 +17,52 @@ public class LevelManager : Singleton<LevelManager>
 	public int minThrust;	// min thrust on slider
 	public int maxThrust;	// max thrust on slider
 
+	private bool isProjectileLaunched;
+
 	// ---
 
-	void Start () 
-	{
+	void Start () {
 		// ensure that thrust values are in the correct order
 		if (minThrust > maxThrust) {
 			int temp = maxThrust;
 			maxThrust = minThrust;
 			minThrust = temp;
 		}
-		// set UI slider min/max values
-		LevelUIManager.Instance.setThrustRange(minThrust, maxThrust);
 		// initialize thrust and angle variables
 		thrust = minThrust;
 		angle = new Vector2(0,0);
+		isProjectileLaunched = false;
+
+		LoadLevel();
 	}
 
 	// ---
 
-	public void setThrust(float mThrust) {	thrust = mThrust; }
-	public void setAngle(Vector2 mAngle) { angle = mAngle; }
+	// applies anything that needs to be registered in other objects
+	private void LoadLevel() {
+		// set UI slider min/max values
+		LevelUIManager.Instance.LoadThrustSlider(minThrust, maxThrust);
+		// loads touchable colliders (start point) from level scene
+		TouchManager.Instance.LoadColliders();
+	}
+
+	// ---
+
+	public void LaunchProjectile() {
+
+	}
+
+	// ---
+
+	public void SetThrust(float mThrust) {	
+		thrust = mThrust;
+		LevelUIManager.Instance.SetThrustText("" + mThrust);
+	}
+
+	// -
+
+	public void SetAngle(Vector2 mAngle) { 
+		angle = mAngle; 
+		// rotate start object
+	}
 }
