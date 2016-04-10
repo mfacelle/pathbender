@@ -6,8 +6,13 @@ using System.Collections;
 // must be a non-persistent object for each new LevelValue to overwrite the Instance
 public class LevelManager : Singleton<LevelManager> 
 {
+	// const across all levels
+	public const float TOLERANCE = 30;	// how many degrees past setAngle before correction
+
 	// current values
-	public Vector2 angle { get; private set; }
+	public Vector2 angleVec { get; private set; }	// set angle (vector2)
+	private float setAngle;					// set angle (degrees)
+	private float currentAngle;			// current angle (moves towards set angle)
 	public float thrust { get; private set; }
 
 	// values per-level
@@ -17,7 +22,11 @@ public class LevelManager : Singleton<LevelManager>
 	public int minThrust;	// min thrust on slider
 	public int maxThrust;	// max thrust on slider
 
+	private Transform startObject;		// the entire start object (used for rotations)
+
 	private bool isProjectileLaunched;
+	private bool rotateCW;	// rotate CW flag
+	private bool rotateCCW;	// rotate CCW flag
 
 	// ---
 
@@ -30,10 +39,51 @@ public class LevelManager : Singleton<LevelManager>
 		}
 		// initialize thrust and angle variables
 		thrust = minThrust;
-		angle = new Vector2(0,0);
+		angleVec = new Vector2(0,0);
+		setAngle = 0;
+		currentAngle = 0;
 		isProjectileLaunched = false;
+		startObject = startPoint.transform.parent.transform;
 
 		LoadLevel();
+	}
+
+	// ---
+
+	// rotates object until currentAngle = setAngle
+	void Update() {
+		if (currentAngle != setAngle) {
+			if (rotateCW) {
+				currentAngle += TouchManager.Instance.ROTATION_SPEED * Time.deltaTime;
+				// keep currentAngle within [0,360)
+				if (currentAngle >= 360) {
+					currentAngle -= 360;
+				}
+				// make sure currentAngle doesn't pass over setAngle
+				if (passedSetAngle(true)) {
+					currentAngle = setAngle;
+				}
+				// rotate object - negative direction, because +z goes into screen and angle on [0,360)
+				startObject.eulerAngles = new Vector3(0, 0, -currentAngle);
+			}
+			else if (rotateCCW) {
+				currentAngle -= TouchManager.Instance.ROTATION_SPEED * Time.deltaTime;
+				// keep currentAngle within [0,360)
+				if (currentAngle < 0) {
+					currentAngle += 360;
+				}
+				// make sure currentAngle doesn't pass over setAngle
+				if (passedSetAngle(false)) {
+					currentAngle = setAngle;
+				}
+				// rotate object - negative direction, because +z goes into screen and angle on [0,360)
+				startObject.eulerAngles = new Vector3(0, 0, -currentAngle);
+			}
+		}
+		else {	// dont rotate at all - unset flags
+			rotateCW = false;
+			rotateCCW = false;
+		}
 	}
 
 	// ---
@@ -49,7 +99,13 @@ public class LevelManager : Singleton<LevelManager>
 	// ---
 
 	public void LaunchProjectile() {
+		// don't launch if it was already launched
+		if (isProjectileLaunched) {
+			return;
+		}
 
+		PlayerProjectile.Instance.ApplyForce(new Vector2(angleVec.x, angleVec.y) * thrust);
+		isProjectileLaunched = true;
 	}
 
 	// ---
@@ -62,7 +118,31 @@ public class LevelManager : Singleton<LevelManager>
 	// -
 
 	public void SetAngle(Vector2 mAngle) { 
-		angle = mAngle; 
-		// rotate start object
+		angleVec = mAngle; 
+		setAngle = Mathf.Atan2(mAngle.x, mAngle.y) * 180 / Mathf.PI;
+		// convert angle to be on [0,360) instead of (-180,180]
+		if (setAngle < 0) {
+			setAngle += 360;
+		}
+
+		// determine angle to rotate (work done in notebook
+		bool angleDiff = (setAngle - currentAngle) > 0;
+		bool oppositeAngleDiff = (360 - Mathf.Abs(setAngle-currentAngle)) > Mathf.Abs(setAngle-currentAngle);
+		rotateCW = angleDiff == oppositeAngleDiff;	// XNOR
+		rotateCCW = angleDiff != oppositeAngleDiff;	// XOR
+	}
+
+	// ---
+
+	// determines if currentAngle has passed over setAngle
+	// checks if it falls withing (setAngle, setAngle+TOLERANCE]
+	//  to avoid changing currentAngle dramatically (ie, moving from 300deg -> 2deg)
+	private bool passedSetAngle(bool isCW) {
+		if (isCW) {
+			return (currentAngle > setAngle) && (currentAngle <= (setAngle+TOLERANCE));
+		}
+		else {
+			return (currentAngle < setAngle) && (currentAngle >= (setAngle-TOLERANCE));
+		}
 	}
 }

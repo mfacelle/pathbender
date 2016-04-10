@@ -4,23 +4,25 @@ using System.Collections;
 public class TouchManager : Singleton<TouchManager>
 {
 	private Collider2D startCollider;	// retrieved on level load
+	public Collider2D touchArea;		// the area where touches are valid (doesnt include UI objects)
+
+	// speed at which to rotate the projectile when new angle is selected
+	public float ROTATION_SPEED;
 
 	// ---
 
 	void Update() {
 		// if there are any touches, get the first one
-		if (Input.touchCount > 0) {
-			Touch t = Input.touches[0];
-			ProcessTouchInput(Camera.main.ScreenToWorldPoint(t.position));
-		}
-	}
-
-	// ---
-
-	// DEBUG TOUCH FUNCTION (because Touch only works on device!)
-	void OnMouseDown() {
 		if (DebugManager.Instance.isDebug) {
-			ProcessTouchInput(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+			if (Input.GetMouseButtonDown(0)) {
+				ProcessTouchInput(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+			}
+		}
+		else {
+			if (Input.touchCount > 0) {
+				Touch t = Input.touches[0];
+				ProcessTouchInput(Camera.main.ScreenToWorldPoint(t.position));
+			}
 		}
 	}
 
@@ -39,15 +41,16 @@ public class TouchManager : Singleton<TouchManager>
 	//  or selects a new launch angle and updates LevelManager
 	private void ProcessTouchInput(Vector2 touch) {
 
-		Debug.Log("TOUCH: " + touch);
-
+		// only process input if it falls inside the touch area
+		if (!touchArea.OverlapPoint(touch)) {
+			return;
+		}
+			
 		// if touching the start planet, launch projectile (on release)
 		if (startCollider.OverlapPoint(touch)) {
-			Debug.Log("applying launch force");
 			LevelManager.Instance.LaunchProjectile();
 		}
 		else {
-			Debug.Log("changing launch angle");
 			AngleInput(CalculateTouchAngle(touch));
 		}
 	}
