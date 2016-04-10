@@ -19,13 +19,20 @@ public class LevelLoader : Singleton<LevelLoader>
 		if (DebugManager.Instance.isDebug) {
 			SceneManager.LoadScene(LEVEL_PREFIX + debugLevelLoad, LoadSceneMode.Additive);
 		}
+		// if key missing, or no level number provided
 		// no scene to load - load the test level.0
-		else if (!PlayerPrefs.HasKey(LOAD_LEVEL_KEY) || PlayerPrefs.GetInt(LOAD_LEVEL_KEY) == 0) {
+		else if (!PlayerPrefs.HasKey(LOAD_LEVEL_KEY) || PlayerPrefs.GetInt(LOAD_LEVEL_KEY) == 0 ) {
 			SceneManager.LoadScene(LEVEL_PREFIX + DEFAULT_LEVEL_NUM, LoadSceneMode.Additive);
 		}
 		// load level pointed to by player pref
 		else {
-			SceneManager.LoadScene(LEVEL_PREFIX + PlayerPrefs.GetInt(LOAD_LEVEL_KEY), LoadSceneMode.Additive);
+			// only load level if it exists (can be loaded)
+			if (Application.CanStreamedLevelBeLoaded(LEVEL_PREFIX + PlayerPrefs.GetInt(LOAD_LEVEL_KEY))) {
+				SceneManager.LoadScene(LEVEL_PREFIX + PlayerPrefs.GetInt(LOAD_LEVEL_KEY), LoadSceneMode.Additive);
+			}
+			else {	
+				SceneManager.LoadScene(LEVEL_PREFIX + DEFAULT_LEVEL_NUM, LoadSceneMode.Additive);
+			}
 		}
 	}
 }
