@@ -27,7 +27,7 @@ public class LevelUIManager : Singleton<LevelUIManager>
 	public void LoadThrustSlider(int min, int max) {
 		thrustSlider.minValue = min;
 		thrustSlider.maxValue = max;
-		thrustText.text = "" + min;
+		thrustText.text = "" + min.ToString("0.0");
 		thrustSlider.value = min;
 	}
 }

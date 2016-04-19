@@ -18,13 +18,15 @@ public class LevelManager : Singleton<LevelManager>
 	// values per-level
 	public ChargedObject startPoint;	// start object
 	public ChargedObject endPoint;		// goal object
+	public GameObject objectContainer;	// container for all charged objects
 	public int levelNumber;	// int value (i.e. level 1, level 2, ...)
 	public int minThrust;	// min thrust on slider
 	public int maxThrust;	// max thrust on slider
 
 	private Transform startObject;		// the entire start object (used for rotations)
 
-	private bool isProjectileLaunched;
+
+	public bool isProjectileLaunched { get; private set; }
 	private bool rotateCW;	// rotate CW flag
 	private bool rotateCCW;	// rotate CCW flag
 
@@ -39,7 +41,8 @@ public class LevelManager : Singleton<LevelManager>
 		}
 		// initialize thrust and angle variables
 		thrust = minThrust;
-		angleVec = new Vector2(0,0);
+		// initial direction is facing upwards (0deg, [0,1])
+		angleVec = new Vector2(0,1);
 		setAngle = 0;
 		currentAngle = 0;
 		isProjectileLaunched = false;
@@ -100,36 +103,39 @@ public class LevelManager : Singleton<LevelManager>
 
 	public void LaunchProjectile() {
 		// don't launch if it was already launched
-		if (isProjectileLaunched) {
-			return;
+		if (!isProjectileLaunched) {
+			PlayerProjectile.Instance.ApplyForce(new Vector2(angleVec.x, angleVec.y) * thrust);
+			isProjectileLaunched = true;
 		}
-
-		PlayerProjectile.Instance.ApplyForce(new Vector2(angleVec.x, angleVec.y) * thrust);
-		isProjectileLaunched = true;
 	}
 
 	// ---
 
 	public void SetThrust(float mThrust) {	
-		thrust = mThrust;
-		LevelUIManager.Instance.SetThrustText("" + mThrust);
+		if (!isProjectileLaunched) {
+			thrust = mThrust;
+			LevelUIManager.Instance.SetThrustText(mThrust.ToString("0.0"));
+		}
 	}
 
 	// -
 
 	public void SetAngle(Vector2 mAngle) { 
-		angleVec = mAngle; 
-		setAngle = Mathf.Atan2(mAngle.x, mAngle.y) * 180 / Mathf.PI;
-		// convert angle to be on [0,360) instead of (-180,180]
-		if (setAngle < 0) {
-			setAngle += 360;
-		}
+		if (!isProjectileLaunched) {
+			angleVec = mAngle; 
+			// technically Atan2 takes (y,x), not (x,y)... but this works really well somehow
+			setAngle = Mathf.Atan2(mAngle.x, mAngle.y) * 180 / Mathf.PI;
+			// convert angle to be on [0,360) instead of (-180,180]
+			if (setAngle < 0) {
+				setAngle += 360;
+			}
 
-		// determine angle to rotate (work done in notebook
-		bool angleDiff = (setAngle - currentAngle) > 0;
-		bool oppositeAngleDiff = (360 - Mathf.Abs(setAngle-currentAngle)) > Mathf.Abs(setAngle-currentAngle);
-		rotateCW = angleDiff == oppositeAngleDiff;	// XNOR
-		rotateCCW = angleDiff != oppositeAngleDiff;	// XOR
+			// determine angle to rotate (work done in notebook
+			bool angleDiff = (setAngle - currentAngle) > 0;
+			bool oppositeAngleDiff = (360 - Mathf.Abs(setAngle-currentAngle)) > Mathf.Abs(setAngle-currentAngle);
+			rotateCW = angleDiff == oppositeAngleDiff;	// XNOR
+			rotateCCW = angleDiff != oppositeAngleDiff;	// XOR
+		}
 	}
 
 	// ---
