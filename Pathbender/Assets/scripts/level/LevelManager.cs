@@ -114,7 +114,7 @@ public class LevelManager : Singleton<LevelManager>
 	public void SetThrust(float mThrust) {	
 		if (!isProjectileLaunched) {
 			thrust = mThrust;
-			LevelUIManager.Instance.SetThrustText("" + mThrust);
+			LevelUIManager.Instance.SetThrustText(mThrust.ToString("0.0"));
 		}
 	}
 
