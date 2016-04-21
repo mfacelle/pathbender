@@ -12,27 +12,73 @@ public class LevelLoader : Singleton<LevelLoader>
 
 	public int debugLevelLoad;
 
+	private string loadedLevelName;
+
 	// ---
 
 	void Start() {
-		// load debug level selection (set in editor)
-		if (DebugManager.Instance.isDebug) {
+		loadedLevelName = "";
+		LoadLevel();
+	}
+
+	// ---
+
+	// load debug level selection (set in editor)
+	public void LoadLevel() {
+		int levelToLoad = PlayerPrefs.GetInt(LOAD_LEVEL_KEY);
+
+		if (DebugManager.Instance.isPCDebug || DebugManager.Instance.isDeviceDebug) {
 			SceneManager.LoadScene(LEVEL_PREFIX + debugLevelLoad, LoadSceneMode.Additive);
+			loadedLevelName = LEVEL_PREFIX + debugLevelLoad;
 		}
 		// if key missing, or no level number provided
 		// no scene to load - load the test level.0
-		else if (!PlayerPrefs.HasKey(LOAD_LEVEL_KEY) || PlayerPrefs.GetInt(LOAD_LEVEL_KEY) == 0 ) {
+		else if (!PlayerPrefs.HasKey(LOAD_LEVEL_KEY) || levelToLoad == 0 ) {
 			SceneManager.LoadScene(LEVEL_PREFIX + DEFAULT_LEVEL_NUM, LoadSceneMode.Additive);
+			loadedLevelName = LEVEL_PREFIX + DEFAULT_LEVEL_NUM;
 		}
 		// load level pointed to by player pref
 		else {
 			// only load level if it exists (can be loaded)
-			if (Application.CanStreamedLevelBeLoaded(LEVEL_PREFIX + PlayerPrefs.GetInt(LOAD_LEVEL_KEY))) {
-				SceneManager.LoadScene(LEVEL_PREFIX + PlayerPrefs.GetInt(LOAD_LEVEL_KEY), LoadSceneMode.Additive);
+			if (Application.CanStreamedLevelBeLoaded(LEVEL_PREFIX + levelToLoad)) {
+				SceneManager.LoadScene(LEVEL_PREFIX + levelToLoad, LoadSceneMode.Additive);
+				loadedLevelName = LEVEL_PREFIX + levelToLoad;
 			}
 			else {	
 				SceneManager.LoadScene(LEVEL_PREFIX + DEFAULT_LEVEL_NUM, LoadSceneMode.Additive);
+				loadedLevelName = LEVEL_PREFIX + DEFAULT_LEVEL_NUM;
 			}
 		}
+	}
+
+	// -
+
+	// loads the level specified by the string arg
+	// assumes levelToLoad is a valid level name
+	public void LoadLevel(string levelNameToLoad) {
+		// only load level if it exists (can be loaded)
+		if (Application.CanStreamedLevelBeLoaded(levelNameToLoad)) {
+			SceneManager.LoadScene(levelNameToLoad, LoadSceneMode.Additive);
+			loadedLevelName = levelNameToLoad;
+		}
+		else {	
+			SceneManager.LoadScene(LEVEL_PREFIX + DEFAULT_LEVEL_NUM, LoadSceneMode.Additive);
+			loadedLevelName = LEVEL_PREFIX + DEFAULT_LEVEL_NUM;
+		}
+	}
+
+	// ---
+
+	// unloads the currently-loaded level
+	public void UnloadLevel() {
+		SceneManager.UnloadScene(loadedLevelName);
+	}
+
+	// ---
+
+	// unloads and re-loads the currently-loaded level (reset)
+	public void ReloadLevel() {
+		UnloadLevel();
+		LoadLevel(loadedLevelName);
 	}
 }
