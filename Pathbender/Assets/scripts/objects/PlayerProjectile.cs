@@ -69,6 +69,8 @@ public class PlayerProjectile : Singleton<PlayerProjectile>
 	// ---
 
 	// compute electrostatic force
+	// 1/r^2 force too weak (although realistic)
+	// 1/r force too strong
 	private float ElectrostaticForce(float q1, float q2, float r) {
 		return PhysicsManager.Instance.E * q1 * q2 / (r*r);
 	}

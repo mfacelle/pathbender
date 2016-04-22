@@ -13,7 +13,7 @@ public class TouchManager : Singleton<TouchManager>
 
 	void Update() {
 		// if there are any touches, get the first one
-		if (DebugManager.Instance.isPCDebug) {
+		if (DebugManager.Instance.isMouseClickDebug) {
 			if (Input.GetMouseButton(0)) {
 				ProcessTouchInput(Camera.main.ScreenToWorldPoint(Input.mousePosition));
 			}

@@ -7,7 +7,7 @@ public class DebugObject : MonoBehaviour
 
 	// turns off the object if debug mode is not active
 	void Start () {
-		if (!(DebugManager.Instance.isDeviceDebug || DebugManager.Instance.isPCDebug)) {
+		if (!DebugManager.Instance.debugObjectsActive) {
 			this.gameObject.SetActive(false);
 		}
 	}

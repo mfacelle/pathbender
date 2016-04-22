@@ -27,7 +27,7 @@ public class LevelLoader : Singleton<LevelLoader>
 	public void LoadLevel() {
 		int levelToLoad = PlayerPrefs.GetInt(LOAD_LEVEL_KEY);
 
-		if (DebugManager.Instance.isPCDebug || DebugManager.Instance.isDeviceDebug) {
+		if (DebugManager.Instance.isLevelDebug) {
 			SceneManager.LoadScene(LEVEL_PREFIX + debugLevelLoad, LoadSceneMode.Additive);
 			loadedLevelName = LEVEL_PREFIX + debugLevelLoad;
 		}
