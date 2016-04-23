@@ -49,6 +49,23 @@ public class PlayerProjectile : Singleton<PlayerProjectile>
 				if (MIN_DISTANCE < r && r < MAX_DISTANCE) {
 					forceAngle = Mathf.Atan2(dx, dy);
 					forceMag = ElectrostaticForce(obj.charge, projectile.charge, r);
+					// adjust force is projectile is
+					if (projectile.isAttractAll) {
+						if (obj.isRepelAll) {	
+							forceMag = 0;	// omnitive and abnitive have no effect on each other
+						}
+						else if (forceMag > 0) {
+							forceMag *= -1;	// reverse force direction if it's not attractive
+						}
+					}
+					if (projectile.isRepelAll) {
+						if (obj.isAttractAll) {	
+							forceMag = 0;	// omnitive and abnitive have no effect on each other
+						}
+						else if (forceMag < 0) {
+							forceMag *= -1;	// reverse force direction if it's repulsive
+						}
+					}
 					//Debug.Log("ADDING FORCE FROM CHARGE="+obj.charge);
 					Debug.Log("\tFORCE:"+forceMag+" angle:"+forceAngle);
 					totalForceX += forceMag * (dx/r);

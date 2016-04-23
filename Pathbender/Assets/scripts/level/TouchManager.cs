@@ -15,13 +15,13 @@ public class TouchManager : Singleton<TouchManager>
 		// if there are any touches, get the first one
 		if (DebugManager.Instance.isMouseClickDebug) {
 			if (Input.GetMouseButton(0)) {
-				ProcessTouchInput(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+				ProcessTouchInput(Camera.main.ScreenToWorldPoint(Input.mousePosition), TouchPhase.Ended);
 			}
 		}
 		else {
 			if (Input.touchCount > 0) {
 				Touch t = Input.touches[0];
-				ProcessTouchInput(Camera.main.ScreenToWorldPoint(t.position));
+				ProcessTouchInput(Camera.main.ScreenToWorldPoint(t.position), t.phase);
 			}
 		}
 	}
@@ -39,15 +39,15 @@ public class TouchManager : Singleton<TouchManager>
 	// called whenever a touch is received
 	// either launches projectile (if start point is pressed)
 	//  or selects a new launch angle and updates LevelManager
-	private void ProcessTouchInput(Vector2 touch) {
+	private void ProcessTouchInput(Vector2 touch, TouchPhase phase) {
 
 		// only process input if it falls inside the touch area
 		if (!touchArea.OverlapPoint(touch)) {
 			return;
 		}
 			
-		// if touching the start planet, launch projectile (on release)
-		if (startCollider.OverlapPoint(touch)) {
+		// if touching the start planet, launch projectile (on release - or if mouse click used)
+		if (startCollider.OverlapPoint(touch) && phase == TouchPhase.Ended ) {
 			LevelManager.Instance.LaunchProjectile();
 		}
 		else {
