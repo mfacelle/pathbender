@@ -8,7 +8,7 @@ public class PlayerProjectile : Singleton<PlayerProjectile>
 	// if distance is below min, ignore it (likely the same particle)
 	private const float MIN_DISTANCE = 0.05f;
 	// if distance is greater than max, ignore it (negligible anyway)
-	private const float MAX_DISTANCE = 8.0f;
+	private const float MAX_DISTANCE = 12.0f;
 
 	// the ChargedProjectile object also attached to this GameObject
 	public ChargedProjectile projectile { get; private set; }
