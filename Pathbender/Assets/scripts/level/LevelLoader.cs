@@ -7,7 +7,7 @@ public class LevelLoader : Singleton<LevelLoader>
 {
 	public static string LOAD_LEVEL_KEY = "level.to.load";
 
-	private const string LEVEL_PREFIX = "level.";
+	public static string LEVEL_PREFIX = "level.";
 	private const string DEFAULT_LEVEL_NUM = "0-1";
 
 	public string debugLevelLoad;
@@ -27,6 +27,8 @@ public class LevelLoader : Singleton<LevelLoader>
 	public void LoadLevel() {
 		string levelToLoad = PlayerPrefs.GetString(LOAD_LEVEL_KEY);
 
+		Debug.Log("LOADING LEVEL " + levelToLoad);
+
 		if (DebugManager.Instance.isLevelDebug) {
 			SceneManager.LoadScene(LEVEL_PREFIX + debugLevelLoad, LoadSceneMode.Additive);
 			loadedLevelName = LEVEL_PREFIX + debugLevelLoad;
@@ -39,6 +41,7 @@ public class LevelLoader : Singleton<LevelLoader>
 		}
 		// load level pointed to by player pref
 		else {
+			Debug.Log("CASE 3: normal level load");
 			// only load level if it exists (can be loaded)
 			if (Application.CanStreamedLevelBeLoaded(LEVEL_PREFIX + levelToLoad)) {
 				SceneManager.LoadScene(LEVEL_PREFIX + levelToLoad, LoadSceneMode.Additive);
@@ -80,5 +83,13 @@ public class LevelLoader : Singleton<LevelLoader>
 	public void ReloadLevel() {
 		UnloadLevel();
 		LoadLevel(loadedLevelName);
+	}
+
+	// ---
+
+	// unloads the level and returns to the map
+	public void BackToMap() {
+		UnloadLevel();
+		SceneManager.LoadScene("level.select", LoadSceneMode.Single);
 	}
 }
