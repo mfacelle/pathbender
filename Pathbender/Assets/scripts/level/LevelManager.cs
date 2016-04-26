@@ -16,23 +16,26 @@ public class LevelManager : Singleton<LevelManager>
 	public float thrust { get; private set; }
 
 	// values per-level
-	public ChargedObject startPoint;	// start object
-	public ChargedObject endPoint;		// goal object
-	public GameObject objectContainer;	// container for all charged objects
-	public int levelNumber;	// int value (i.e. level 1, level 2, ...)
+	public ChargedObject startPoint { get; private set; }	// start object
+	public ChargedObject endPoint { get; private set; }		// goal object
+	public GameObject objectContainer { get; private set; }	// container for all charged objects
+	public string levelNumber;	// string value (i.e. level 1-1, level 1-2, ...)
 	public int minThrust;	// min thrust on slider
 	public int maxThrust;	// max thrust on slider
 
 	private Transform startObject;		// the entire start object (used for rotations)
 
 
-	public bool isProjectileLaunched { get; private set; }
 	private bool rotateCW;	// rotate CW flag
 	private bool rotateCCW;	// rotate CCW flag
+
+	// flag for other classes to check if LevelManager is ready (i.e. PlayerProjectile)
+	public bool isLoaded { get; private set; }
 
 	// ---
 
 	void Start () {
+		isLoaded = false;
 		// ensure that thrust values are in the correct order
 		if (minThrust > maxThrust) {
 			int temp = maxThrust;
@@ -45,10 +48,9 @@ public class LevelManager : Singleton<LevelManager>
 		angleVec = new Vector2(0,1);
 		setAngle = 0;
 		currentAngle = 0;
-		isProjectileLaunched = false;
-		startObject = startPoint.transform.parent.transform;
 
 		LoadLevel();
+		isLoaded = true;
 	}
 
 	// ---
@@ -93,26 +95,32 @@ public class LevelManager : Singleton<LevelManager>
 
 	// applies anything that needs to be registered in other objects
 	private void LoadLevel() {
+		startPoint = StartPoint.Instance.chargedObject;
+		endPoint = EndPoint.Instance.chargedObject;
+		objectContainer = ObjectContainer.Instance.gameObject;
+		startObject = startPoint.transform.parent.transform;
+
+		// THE FOLLOWING COULD BE UNSAFE - they rely on script execution order
+		// could use some kind of coroutine or a simple polling-wait for non-null instance to set these...
+
 		// set UI slider min/max values
 		LevelUIManager.Instance.LoadThrustSlider(minThrust, maxThrust);
 		// loads touchable colliders (start point) from level scene
-		TouchManager.Instance.LoadColliders();
+		TouchManager.Instance.SetStartCollider(startPoint.GetComponent<Collider2D>());
+		// loads the charged objects into PlayerProjectile
+		PlayerProjectile.Instance.SetChargedObjects(GetAllChargedObjects());
 	}
 
 	// ---
 
 	public void LaunchProjectile() {
-		// don't launch if it was already launched
-		if (!isProjectileLaunched) {
-			PlayerProjectile.Instance.ApplyForce(new Vector2(angleVec.x, angleVec.y) * thrust);
-			isProjectileLaunched = true;
-		}
+		PlayerProjectile.Instance.Launch(new Vector2(angleVec.x, angleVec.y) * thrust);
 	}
 
 	// ---
 
 	public void SetThrust(float mThrust) {	
-		if (!isProjectileLaunched) {
+		if (!PlayerProjectile.Instance.isLaunched) {
 			thrust = mThrust;
 			LevelUIManager.Instance.SetThrustText(mThrust.ToString("0.0"));
 		}
@@ -121,7 +129,7 @@ public class LevelManager : Singleton<LevelManager>
 	// -
 
 	public void SetAngle(Vector2 mAngle) { 
-		if (!isProjectileLaunched) {
+		if (!PlayerProjectile.Instance.isLaunched) {
 			angleVec = mAngle; 
 			// technically Atan2 takes (y,x), not (x,y)... but this works really well somehow
 			setAngle = Mathf.Atan2(mAngle.x, mAngle.y) * 180 / Mathf.PI;
@@ -150,5 +158,11 @@ public class LevelManager : Singleton<LevelManager>
 		else {
 			return (currentAngle < setAngle) && (currentAngle >= (setAngle-TOLERANCE));
 		}
+	}
+
+	// ---
+
+	public ChargedObject[] GetAllChargedObjects() {
+		return objectContainer.GetComponentsInChildren<ChargedObject>();
 	}
 }

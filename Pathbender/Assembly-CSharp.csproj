@@ -52,8 +52,11 @@
      <Compile Include="Assets\scripts\level\TouchManager.cs" />
      <Compile Include="Assets\scripts\objects\ChargedObject.cs" />
      <Compile Include="Assets\scripts\objects\ChargedProjectile.cs" />
+     <Compile Include="Assets\scripts\objects\EndPoint.cs" />
+     <Compile Include="Assets\scripts\objects\ObjectContainer.cs" />
      <Compile Include="Assets\scripts\objects\PhysicsManager.cs" />
      <Compile Include="Assets\scripts\objects\PlayerProjectile.cs" />
+     <Compile Include="Assets\scripts\objects\StartPoint.cs" />
      <Compile Include="Assets\scripts\objects\VibratingObject.cs" />
      <Compile Include="Assets\scripts\util\CameraFixer.cs" />
      <Compile Include="Assets\scripts\util\DebugObject.cs" />

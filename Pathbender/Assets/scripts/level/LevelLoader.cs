@@ -8,9 +8,9 @@ public class LevelLoader : Singleton<LevelLoader>
 	public static string LOAD_LEVEL_KEY = "level.to.load";
 
 	private const string LEVEL_PREFIX = "level.";
-	private const int DEFAULT_LEVEL_NUM = 0;
+	private const string DEFAULT_LEVEL_NUM = "0-1";
 
-	public int debugLevelLoad;
+	public string debugLevelLoad;
 
 	private string loadedLevelName;
 
@@ -25,7 +25,7 @@ public class LevelLoader : Singleton<LevelLoader>
 
 	// load debug level selection (set in editor)
 	public void LoadLevel() {
-		int levelToLoad = PlayerPrefs.GetInt(LOAD_LEVEL_KEY);
+		string levelToLoad = PlayerPrefs.GetString(LOAD_LEVEL_KEY);
 
 		if (DebugManager.Instance.isLevelDebug) {
 			SceneManager.LoadScene(LEVEL_PREFIX + debugLevelLoad, LoadSceneMode.Additive);
@@ -33,7 +33,7 @@ public class LevelLoader : Singleton<LevelLoader>
 		}
 		// if key missing, or no level number provided
 		// no scene to load - load the test level.0
-		else if (!PlayerPrefs.HasKey(LOAD_LEVEL_KEY) || levelToLoad == 0 ) {
+		else if (!PlayerPrefs.HasKey(LOAD_LEVEL_KEY) || levelToLoad == "" ) {
 			SceneManager.LoadScene(LEVEL_PREFIX + DEFAULT_LEVEL_NUM, LoadSceneMode.Additive);
 			loadedLevelName = LEVEL_PREFIX + DEFAULT_LEVEL_NUM;
 		}
