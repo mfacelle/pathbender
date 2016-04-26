@@ -8,5 +8,6 @@ public class EndPoint : Singleton<EndPoint> {
 
 	void Start() {
 		chargedObject = this.gameObject.GetComponent<ChargedObject>();
+		
 	}
 }

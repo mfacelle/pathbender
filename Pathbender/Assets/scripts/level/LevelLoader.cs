@@ -27,27 +27,28 @@ public class LevelLoader : Singleton<LevelLoader>
 	public void LoadLevel() {
 		string levelToLoad = PlayerPrefs.GetString(LOAD_LEVEL_KEY);
 
-		Debug.Log("LOADING LEVEL " + levelToLoad);
-
 		if (DebugManager.Instance.isLevelDebug) {
+			Debug.Log("Loading debug level " + debugLevelLoad);
 			SceneManager.LoadScene(LEVEL_PREFIX + debugLevelLoad, LoadSceneMode.Additive);
 			loadedLevelName = LEVEL_PREFIX + debugLevelLoad;
 		}
 		// if key missing, or no level number provided
 		// no scene to load - load the test level.0
 		else if (!PlayerPrefs.HasKey(LOAD_LEVEL_KEY) || levelToLoad == "" ) {
+			Debug.Log("Loading default level " + DEFAULT_LEVEL_NUM);
 			SceneManager.LoadScene(LEVEL_PREFIX + DEFAULT_LEVEL_NUM, LoadSceneMode.Additive);
 			loadedLevelName = LEVEL_PREFIX + DEFAULT_LEVEL_NUM;
 		}
 		// load level pointed to by player pref
 		else {
-			Debug.Log("CASE 3: normal level load");
 			// only load level if it exists (can be loaded)
 			if (Application.CanStreamedLevelBeLoaded(LEVEL_PREFIX + levelToLoad)) {
+				Debug.Log("Loading level " + levelToLoad);
 				SceneManager.LoadScene(LEVEL_PREFIX + levelToLoad, LoadSceneMode.Additive);
 				loadedLevelName = LEVEL_PREFIX + levelToLoad;
 			}
 			else {	
+				Debug.Log("Cannot load level " + levelToLoad + "; loading default level " + DEFAULT_LEVEL_NUM);
 				SceneManager.LoadScene(LEVEL_PREFIX + DEFAULT_LEVEL_NUM, LoadSceneMode.Additive);
 				loadedLevelName = LEVEL_PREFIX + DEFAULT_LEVEL_NUM;
 			}
