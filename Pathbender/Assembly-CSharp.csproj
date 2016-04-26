@@ -53,6 +53,7 @@
      <Compile Include="Assets\scripts\level\TouchManager.cs" />
      <Compile Include="Assets\scripts\objects\ChargedObject.cs" />
      <Compile Include="Assets\scripts\objects\ChargedProjectile.cs" />
+     <Compile Include="Assets\scripts\objects\EndMarker.cs" />
      <Compile Include="Assets\scripts\objects\EndPoint.cs" />
      <Compile Include="Assets\scripts\objects\ObjectContainer.cs" />
      <Compile Include="Assets\scripts\objects\PhysicsManager.cs" />
