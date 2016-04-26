@@ -73,9 +73,9 @@ public class TouchManager : Singleton<TouchManager>
 
 	// ---
 
-	// loads any touch-able Collider2D objects
-	public void LoadColliders() {
-		startCollider = LevelManager.Instance.startPoint.GetComponent<Collider2D>();
+	// sets the start collider object
+	public void SetStartCollider(Collider2D collider) {
+		startCollider = collider;
 	}
 
 

@@ -16,11 +16,31 @@ public class PlayerProjectile : Singleton<PlayerProjectile>
 	// the other charged particles in the scene
 	public ChargedObject[] objects { get; private set; }
 
+	// trail renderer (for turning on/off)
+	private TrailRenderer trail;
+	// duration (in s) of the trail
+	public float trailTime;
+
+	// marker if the projectile has been launched or not
+	public bool isLaunched { get; private set; }
+
 	// ---
 
 	void Start() {
 		projectile = this.gameObject.GetComponent<ChargedProjectile>();
-		objects = LevelManager.Instance.objectContainer.GetComponentsInChildren<ChargedObject>();
+		trail = this.gameObject.GetComponent<TrailRenderer>();
+		trail.time = 0;	// so trail doesnt render when turned on
+		isLaunched = false;
+	}
+
+	// ---
+
+	public void Launch(Vector2 force) {
+		if (!isLaunched) {
+			isLaunched = true;
+			trail.time = trailTime;
+			ApplyForce(force);
+		}
 	}
 
 	// ---
@@ -28,12 +48,11 @@ public class PlayerProjectile : Singleton<PlayerProjectile>
 	// iterate over all charged objects and apply electromagnetic force
 	void FixedUpdate() {
 		// only apply force if the projectile has been launched
-		if (LevelManager.Instance.isProjectileLaunched) {
+		if (isLaunched) {
 			Vector2 projectilePosition = projectile.transform.position;
 			float totalForceX = 0;
 			float totalForceY = 0;
 			float forceMag;
-			float forceAngle;
 			float dx, dy, r;
 			ChargedObject obj;
 			for (int i = 0; i < objects.Length; i++) {
@@ -47,7 +66,6 @@ public class PlayerProjectile : Singleton<PlayerProjectile>
 				dy = projectilePosition.y - obj.transform.position.y;
 				r = Mathf.Sqrt(dx*dx + dy*dy);
 				if (MIN_DISTANCE < r && r < MAX_DISTANCE) {
-					forceAngle = Mathf.Atan2(dx, dy);
 					forceMag = ElectrostaticForce(obj.charge, projectile.charge, r);
 					// adjust force is projectile is
 					if (projectile.isAttractAll) {
@@ -66,8 +84,6 @@ public class PlayerProjectile : Singleton<PlayerProjectile>
 							forceMag *= -1;	// reverse force direction if it's repulsive
 						}
 					}
-					//Debug.Log("ADDING FORCE FROM CHARGE="+obj.charge);
-					Debug.Log("\tFORCE:"+forceMag+" angle:"+forceAngle);
 					totalForceX += forceMag * (dx/r);
 					totalForceY += forceMag * (dy/r);
 				}
@@ -79,6 +95,7 @@ public class PlayerProjectile : Singleton<PlayerProjectile>
 
 	// ---
 
+	// applies a force to the particle
 	public void ApplyForce(Vector2 force) {
 		projectile.ApplyForce(force);
 	}
@@ -92,4 +109,9 @@ public class PlayerProjectile : Singleton<PlayerProjectile>
 		return PhysicsManager.Instance.E * q1 * q2 / (r*r);
 	}
 
+	// ---
+
+	public void SetChargedObjects(ChargedObject[] chargedObjects) {
+		objects = chargedObjects;
+	}
 }
