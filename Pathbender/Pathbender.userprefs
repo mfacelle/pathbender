@@ -1,15 +1,13 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/scripts/level/LevelLoader.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/scripts/level/LevelSelector.cs">
     <Files>
-      <File FileName="Assets/scripts/objects/PlayerProjectile.cs" Line="1" Column="1" />
-      <File FileName="Assets/scripts/level/LevelManager.cs" Line="1" Column="1" />
-      <File FileName="Assets/scripts/level/TouchManager.cs" Line="1" Column="1" />
-      <File FileName="Assets/scripts/level/LevelSelector.cs" Line="1" Column="1" />
-      <File FileName="Assets/scripts/level/LevelLoader.cs" Line="64" Column="63" />
-      <File FileName="Assets/scripts/objects/EndPoint.cs" Line="1" Column="1" />
-      <File FileName="Assets/scripts/objects/EndMarker.cs" Line="1" Column="1" />
-      <File FileName="Assets/scripts/level/DebugManager.cs" Line="1" Column="1" />
+      <File FileName="Assets/scripts/level/LevelUIManager.cs" Line="73" Column="27" />
+      <File FileName="Assets/scripts/level/LevelManager.cs" Line="175" Column="2" />
+      <File FileName="Assets/scripts/level/PopUpWindow.cs" Line="24" Column="74" />
+      <File FileName="Assets/scripts/level/LevelLoader.cs" Line="6" Column="51" />
+      <File FileName="Assets/scripts/level/TouchManager.cs" Line="18" Column="1" />
+      <File FileName="Assets/scripts/level/LevelSelector.cs" Line="6" Column="43" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

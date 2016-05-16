@@ -57,6 +57,10 @@ public class LevelManager : Singleton<LevelManager>
 
 	// rotates object until currentAngle = setAngle
 	void Update() {
+		if (LevelUIManager.Instance.isPaused) {
+			return;
+		}
+
 		if (currentAngle != setAngle) {
 			if (rotateCW) {
 				currentAngle += TouchManager.Instance.ROTATION_SPEED * Time.deltaTime;
@@ -114,13 +118,15 @@ public class LevelManager : Singleton<LevelManager>
 	// ---
 
 	public void LaunchProjectile() {
-		PlayerProjectile.Instance.Launch(new Vector2(angleVec.x, angleVec.y) * thrust);
+		if (!LevelUIManager.Instance.isPaused) {
+			PlayerProjectile.Instance.Launch(new Vector2(angleVec.x, angleVec.y) * thrust);
+		}
 	}
 
 	// ---
 
 	public void SetThrust(float mThrust) {	
-		if (!PlayerProjectile.Instance.isLaunched) {
+		if (!PlayerProjectile.Instance.isLaunched && !LevelUIManager.Instance.isPaused) {
 			thrust = mThrust;
 			LevelUIManager.Instance.SetThrustText(mThrust.ToString("0.0"));
 		}
@@ -129,7 +135,7 @@ public class LevelManager : Singleton<LevelManager>
 	// -
 
 	public void SetAngle(Vector2 mAngle) { 
-		if (!PlayerProjectile.Instance.isLaunched) {
+		if (!PlayerProjectile.Instance.isLaunched && !LevelUIManager.Instance.isPaused) {
 			angleVec = mAngle; 
 			// technically Atan2 takes (y,x), not (x,y)... but this works really well somehow
 			setAngle = Mathf.Atan2(mAngle.x, mAngle.y) * 180 / Mathf.PI;
@@ -165,4 +171,6 @@ public class LevelManager : Singleton<LevelManager>
 	public ChargedObject[] GetAllChargedObjects() {
 		return objectContainer.GetComponentsInChildren<ChargedObject>();
 	}
+
+
 }

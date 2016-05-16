@@ -6,6 +6,11 @@ public class LevelUIManager : Singleton<LevelUIManager>
 {
 	public Text thrustText;
 	public Slider thrustSlider;
+	public Button changeParticleButton;
+	public PopUpWindow startMenu;
+
+	// flag for is the level is paused (hasn't started, in menu, ended)
+	public bool isPaused { get; private set; }
 
 	// ---
 
@@ -13,6 +18,10 @@ public class LevelUIManager : Singleton<LevelUIManager>
 		thrustText.text = "" + 0;
 		thrustSlider.minValue = 0;
 		thrustSlider.maxValue = 1;
+
+		// set the game to paused and bring down the start menu
+		SetPausedState(true);
+		startMenu.OpenWindow();
 	}
 
 	// -
@@ -29,5 +38,38 @@ public class LevelUIManager : Singleton<LevelUIManager>
 		thrustSlider.maxValue = max;
 		thrustText.text = "" + min.ToString("0.0");
 		thrustSlider.value = min;
+	}
+
+	// ---
+
+	// toggles pause (from UI)
+	public void TogglePause() {
+		isPaused = !isPaused;
+		SetInteractableUIState();
+	}
+
+	// set paused state directly
+	public void SetPausedState(bool newState) {
+		isPaused = newState;
+		SetInteractableUIState();
+	}
+		
+	private void SetInteractableUIState() {
+		if (isPaused) {	// moving to paused state
+			thrustSlider.interactable = false;
+			changeParticleButton.interactable = false;
+		}
+		else {	// if coming un-paused
+			thrustSlider.interactable = true;
+			changeParticleButton.interactable = true;
+		}
+	}
+
+	// ---
+
+	// starts the level: unpauses game and closes the start menu
+	public void StartLevel() {
+		SetPausedState(false);
+		startMenu.CloseWindow();
 	}
 }

@@ -50,6 +50,7 @@
      <Compile Include="Assets\scripts\level\LevelManager.cs" />
      <Compile Include="Assets\scripts\level\LevelSelector.cs" />
      <Compile Include="Assets\scripts\level\LevelUIManager.cs" />
+     <Compile Include="Assets\scripts\level\PopUpWindow.cs" />
      <Compile Include="Assets\scripts\level\TouchManager.cs" />
      <Compile Include="Assets\scripts\objects\ChargedObject.cs" />
      <Compile Include="Assets\scripts\objects\ChargedProjectile.cs" />
