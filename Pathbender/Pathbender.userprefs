@@ -3,13 +3,13 @@
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets/scripts/level/LevelLoader.cs">
     <Files>
       <File FileName="Assets/scripts/objects/PlayerProjectile.cs" Line="1" Column="1" />
-      <File FileName="Assets/scripts/level/LevelManager.cs" Line="101" Column="1" />
-      <File FileName="Assets/scripts/level/TouchManager.cs" Line="78" Column="28" />
-      <File FileName="Assets/scripts/level/LevelSelector.cs" Line="10" Column="1" />
-      <File FileName="Assets/scripts/level/LevelLoader.cs" Line="51" Column="100" />
-      <File FileName="Assets/scripts/objects/EndPoint.cs" Line="5" Column="1" />
-      <File FileName="Assets/scripts/objects/EndMarker.cs" Line="14" Column="2" />
-      <File FileName="Assets/scripts/level/DebugManager.cs" Line="10" Column="1" />
+      <File FileName="Assets/scripts/level/LevelManager.cs" Line="1" Column="1" />
+      <File FileName="Assets/scripts/level/TouchManager.cs" Line="1" Column="1" />
+      <File FileName="Assets/scripts/level/LevelSelector.cs" Line="1" Column="1" />
+      <File FileName="Assets/scripts/level/LevelLoader.cs" Line="64" Column="63" />
+      <File FileName="Assets/scripts/objects/EndPoint.cs" Line="1" Column="1" />
+      <File FileName="Assets/scripts/objects/EndMarker.cs" Line="1" Column="1" />
+      <File FileName="Assets/scripts/level/DebugManager.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
