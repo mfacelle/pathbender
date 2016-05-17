@@ -113,6 +113,10 @@ public class LevelManager : Singleton<LevelManager>
 		TouchManager.Instance.SetStartCollider(startPoint.GetComponent<Collider2D>());
 		// loads the charged objects into PlayerProjectile
 		PlayerProjectile.Instance.SetChargedObjects(GetAllChargedObjects());
+		// sets the level number in the start menu UI object
+		LevelUIManager.Instance.SetStartMenuLevelNumber(levelNumber);
+		// set paused state and bring down start menu
+		LevelUIManager.Instance.LoadLevel();
 	}
 
 	// ---
