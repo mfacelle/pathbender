@@ -10,6 +10,12 @@ public class LevelUIManager : Singleton<LevelUIManager>
 	public PopUpWindow startMenu;
 	public Text startMenuText;
 
+	// success/fail message and reference to the canvas to tie them to
+	public PopUpWindow successMessage;
+	public PopUpWindow failureMessage;
+
+	public Canvas canvas;
+
 	// flag for is the level is paused (hasn't started, in menu, ended)
 	public bool isPaused { get; private set; }
 
@@ -87,5 +93,21 @@ public class LevelUIManager : Singleton<LevelUIManager>
 
 	public void SetStartMenuLevelNumber(string levelNumber) {
 		startMenuText.text = "Level " + levelNumber;
+	}
+
+	// ---
+
+	public void LoadFailureMessage() {
+		failureMessage = Instantiate(failureMessage) as PopUpWindow;
+		failureMessage.transform.SetParent(canvas.transform, false);
+		failureMessage.OpenWindow();
+	}
+
+	// ---
+
+	public void LoadSuccessMessage() {
+		successMessage = Instantiate(successMessage) as PopUpWindow;
+		successMessage.transform.SetParent(canvas.transform, false);
+		successMessage.OpenWindow();
 	}
 }
