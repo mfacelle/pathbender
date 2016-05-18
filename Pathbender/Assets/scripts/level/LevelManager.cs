@@ -8,6 +8,7 @@ public class LevelManager : Singleton<LevelManager>
 {
 	// const across all levels
 	public const float TOLERANCE = 30;	// how many degrees past setAngle before correction
+	private const float END_LEVEL_WAIT_TIME = 1;	// how many seconds after fail/success message appears to reload/close
 
 	// current values
 	public Vector2 angleVec { get; private set; }	// set angle (vector2)
@@ -32,6 +33,11 @@ public class LevelManager : Singleton<LevelManager>
 	// flag for other classes to check if LevelManager is ready (i.e. PlayerProjectile)
 	public bool isLoaded { get; private set; }
 
+	// wait time after success/fail message before reloading or going back to map
+	private float currentWaitTime;
+	private bool isLevelFailed;
+	private bool isLevelPassed;
+
 	// ---
 
 	void Start () {
@@ -51,17 +57,19 @@ public class LevelManager : Singleton<LevelManager>
 
 		LoadLevel();
 		isLoaded = true;
+
+		isLevelFailed = false;
+		isLevelPassed = false;
+		currentWaitTime = 0;
 	}
 
 	// ---
 
 	// rotates object until currentAngle = setAngle
+	// also counts down to reload/gobacktomap when level failed/passed
 	void Update() {
-		if (LevelUIManager.Instance.isPaused) {
-			return;
-		}
-
-		if (currentAngle != setAngle) {
+		
+		if (!LevelUIManager.Instance.isPaused && currentAngle != setAngle) {
 			if (rotateCW) {
 				currentAngle += TouchManager.Instance.ROTATION_SPEED * Time.deltaTime;
 				// keep currentAngle within [0,360)
@@ -92,6 +100,23 @@ public class LevelManager : Singleton<LevelManager>
 		else {	// dont rotate at all - unset flags
 			rotateCW = false;
 			rotateCCW = false;
+		}
+
+		// if level failed, countdown to reload/back to map
+		if (isLevelFailed || isLevelPassed) {
+			// increment timer
+			currentWaitTime += Time.deltaTime;
+			// is time passed, either reload level or return to map
+			if (currentWaitTime >= END_LEVEL_WAIT_TIME) {
+				if (isLevelFailed) {
+					LevelLoader.Instance.ReloadLevel();
+					LevelUIManager.Instance.UnloadFailureMessage();
+				}
+				else { // isLevelPassed
+					LevelLoader.Instance.BackToMap();
+					LevelUIManager.Instance.UnloadSuccessMessage();
+				}
+			}
 		}
 	}
 
@@ -182,19 +207,17 @@ public class LevelManager : Singleton<LevelManager>
 	public void LevelFail() {
 		LevelUIManager.Instance.SetPausedState(true);
 		LevelUIManager.Instance.LoadFailureMessage();
-		// TODO - set countdown flag and check for it in Update (to reload level)
+		isLevelFailed = true;
 	}
 
 	// ---
 
 	// pause game, and displays level success message
-	// TODO - much later: goes back to map, marks this level as completed, unlocks next level
 	public void LevelSucceed() {
 		LevelUIManager.Instance.SetPausedState(true);
 		LevelUIManager.Instance.LoadSuccessMessage();
-		// TODO - set countdown flag and check for it in Update (to go back to level select scene)
 		// TODO - set flags to mark level as completed and unlock next level
-
+		isLevelPassed = true;
 	}
 
 

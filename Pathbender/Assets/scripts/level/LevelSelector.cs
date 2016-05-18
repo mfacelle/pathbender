@@ -9,6 +9,12 @@ public class LevelSelector : MonoBehaviour {
 
 	// ---
 
+	void Start() {
+		// TODO - check flags to see if a level should now be unlocked (if coming from level success)
+	}
+
+	// ---
+
 	// sets flag of the level to load, then loads level.base, which loads the actual level
 	public void LoadLevel(string levelToLoad) {
 		PlayerPrefs.SetString(LevelLoader.LOAD_LEVEL_KEY, levelToLoad);
