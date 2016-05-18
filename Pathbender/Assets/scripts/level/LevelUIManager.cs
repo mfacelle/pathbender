@@ -10,10 +10,15 @@ public class LevelUIManager : Singleton<LevelUIManager>
 	public PopUpWindow startMenu;
 	public Text startMenuText;
 
-	// success/fail message and reference to the canvas to tie them to
-	public PopUpWindow successMessage;
-	public PopUpWindow failureMessage;
+	// success/fail message 
+	public PopUpWindow successMessagePrefab;
+	public PopUpWindow failureMessagePrefab;
 
+	public PopUpWindow successMessage { get; private set; }
+	public PopUpWindow failureMessage { get; private set; }
+
+
+	// canvas reference to tie prefabs to (need to set parent)
 	public Canvas canvas;
 
 	// flag for is the level is paused (hasn't started, in menu, ended)
@@ -31,8 +36,8 @@ public class LevelUIManager : Singleton<LevelUIManager>
 		SetPausedState(true);
 		startMenu.OpenWindow();
 	}
-
-	// -
+		
+	// ---
 
 	public void SetThrustText(string value) {	
 		thrustText.text = value;	
@@ -61,7 +66,10 @@ public class LevelUIManager : Singleton<LevelUIManager>
 		isPaused = newState;
 		SetInteractableUIState();
 	}
+
+	// ---
 		
+	// set state of interactable UI objects (slider, buttons)
 	private void SetInteractableUIState() {
 		if (isPaused) {	// moving to paused state
 			thrustSlider.interactable = false;
@@ -76,6 +84,7 @@ public class LevelUIManager : Singleton<LevelUIManager>
 	// ---
 
 	// loads the level: pauses game and brings down the start menu
+	// moves fail/success message offscreen
 	public void LoadLevel() {
 		SetPausedState(true);
 		startMenu.OpenWindow();
@@ -98,16 +107,28 @@ public class LevelUIManager : Singleton<LevelUIManager>
 	// ---
 
 	public void LoadFailureMessage() {
-		failureMessage = Instantiate(failureMessage) as PopUpWindow;
+		failureMessage = Instantiate(failureMessagePrefab) as PopUpWindow;
 		failureMessage.transform.SetParent(canvas.transform, false);
 		failureMessage.OpenWindow();
+	}
+
+	public void UnloadFailureMessage() {
+		GameObject.Destroy(failureMessage.gameObject);
 	}
 
 	// ---
 
 	public void LoadSuccessMessage() {
-		successMessage = Instantiate(successMessage) as PopUpWindow;
+		successMessage = Instantiate(successMessagePrefab) as PopUpWindow;
 		successMessage.transform.SetParent(canvas.transform, false);
 		successMessage.OpenWindow();
 	}
+
+	public void UnloadSuccessMessage() {
+		GameObject.Destroy(successMessage.gameObject);
+	}
+
+	// ---
+
+
 }

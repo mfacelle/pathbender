@@ -49,6 +49,13 @@ public class PopUpWindow : MonoBehaviour
 		atDestination = false;
 	}
 
+	// drop window in place instantly
+	public void InstantOpenWindow() {
+		rect.localPosition = new Vector2(rect.localPosition.x, positionY);
+		destination = new Vector2(rect.localPosition.x, positionY);
+		atDestination = true;
+	}
+
 	// ---
 
 	// bring window up to off-screen
@@ -56,6 +63,13 @@ public class PopUpWindow : MonoBehaviour
 		//rect.localPosition = new Vector2(rect.localPosition.x, SCREEN_TOP + rect.rect.height);
 		destination = new Vector2(rect.localPosition.x, SCREEN_TOP + rect.rect.height);
 		atDestination = false;
+	}
+
+	// move window offscreen instantly
+	public void InstantCloseWindow() {
+		rect.localPosition = new Vector2(rect.localPosition.x, SCREEN_TOP + rect.rect.height);
+		destination = new Vector2(rect.localPosition.x, SCREEN_TOP + rect.rect.height);
+		atDestination = true;
 	}
 
 	// ---
