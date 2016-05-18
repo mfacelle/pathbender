@@ -176,5 +176,26 @@ public class LevelManager : Singleton<LevelManager>
 		return objectContainer.GetComponentsInChildren<ChargedObject>();
 	}
 
+	// ---
+
+	// pause game, displays failure message, reloads the level
+	public void LevelFail() {
+		LevelUIManager.Instance.SetPausedState(true);
+		LevelUIManager.Instance.LoadFailureMessage();
+		// TODO - set countdown flag and check for it in Update (to reload level)
+	}
+
+	// ---
+
+	// pause game, and displays level success message
+	// TODO - much later: goes back to map, marks this level as completed, unlocks next level
+	public void LevelSucceed() {
+		LevelUIManager.Instance.SetPausedState(true);
+		LevelUIManager.Instance.LoadSuccessMessage();
+		// TODO - set countdown flag and check for it in Update (to go back to level select scene)
+		// TODO - set flags to mark level as completed and unlock next level
+
+	}
+
 
 }

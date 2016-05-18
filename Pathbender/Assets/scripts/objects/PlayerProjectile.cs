@@ -47,8 +47,9 @@ public class PlayerProjectile : Singleton<PlayerProjectile>
 
 	// iterate over all charged objects and apply electromagnetic force
 	void FixedUpdate() {
-		// only apply force if the projectile has been launched
-		if (isLaunched) {
+		// only apply force if the projectile has been launched and game not paused
+		// TODO - ignore pause state here; particle will display explode animation and be destroyed on collision
+		if (!LevelUIManager.Instance.isPaused && isLaunched) {
 			Vector2 projectilePosition = projectile.transform.position;
 			float totalForceX = 0;
 			float totalForceY = 0;
@@ -113,5 +114,22 @@ public class PlayerProjectile : Singleton<PlayerProjectile>
 
 	public void SetChargedObjects(ChargedObject[] chargedObjects) {
 		objects = chargedObjects;
+	}
+
+	// ---
+
+	// on collision with endpoint, succeed; otherwise, fail
+	// TODO - particle will be destroyed and display an animation
+	void OnCollisionEnter2D(Collision2D col) {
+		if (col.collider.tag == "End") {
+			// TODO - in future, show animation THEN, on exit, run this function
+			LevelManager.Instance.LevelSucceed();
+		}
+		else {
+			// TODO - in future, show animation THEN, on exit, run this function
+			LevelManager.Instance.LevelFail();
+		}
+		// set velocity to 0, so particle doesn't move around
+		this.GetComponent<Rigidbody2D>().velocity = new Vector2(0,0);
 	}
 }
