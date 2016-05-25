@@ -84,10 +84,16 @@ public class LevelUIManager : Singleton<LevelUIManager>
 	// ---
 
 	// loads the level: pauses game and brings down the start menu
-	// moves fail/success message offscreen
 	public void LoadLevel() {
 		SetPausedState(true);
 		startMenu.OpenWindow();
+		// remove success/fail messages if they exist (likely due to a press of "reload" at a bad time)
+		if (failureMessage != null) {
+			UnloadFailureMessage();
+		}
+		if (successMessage != null) {
+			UnloadSuccessMessage();
+		}
 	}
 
 	// ---
