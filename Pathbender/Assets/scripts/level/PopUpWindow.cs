@@ -8,7 +8,7 @@ public class PopUpWindow : MonoBehaviour
 	private const int SCREEN_TOP = 1000;
 
 	// how fast the window will scroll down/up
-	private const int SPEED = 100;
+	private int SPEED = 150;
 
 	private RectTransform rect;	// the RectTransform that sets position
 	public int positionY;		// the y-position to drop the window down to
@@ -25,7 +25,6 @@ public class PopUpWindow : MonoBehaviour
 		rect.localPosition = new Vector2(rect.localPosition.x, SCREEN_TOP + rect.rect.height);
 		destination = new Vector2(rect.localPosition.x, SCREEN_TOP + rect.rect.height);
 		atDestination = true;
-
 	}
 
 	// ---
